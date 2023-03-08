@@ -449,7 +449,7 @@ function showMovieCheckboxes(){
             aria-label=""
             aria-describedby="basic-addon2"
             onChange={(e) => {
-              if (e.target.value.match(/^[A-Z 'a-z0-9]*$/)) {
+              if (e.target.value.match(/^[A-Z 'a-z0-9 -:]*$/)) {
                 setInput(e.target.value);
               }
             }}
