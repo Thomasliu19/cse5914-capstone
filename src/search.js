@@ -6,6 +6,7 @@ import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import React, { useState } from "react";
 import axios from "axios";
+import Carousel from "react-grid-carousel";
 
 var Buffer = require("buffer/").Buffer;
 
@@ -31,7 +32,6 @@ function Search(props) {
     setSelectedCheckbox(event.target.value);
   }
 
-  
   const token = `${"ma8uksnn1e"}:${"p2z0os6mqq"}`;
   const encodedToken = Buffer.from(token).toString("base64");
 
@@ -126,7 +126,7 @@ function Search(props) {
           let queryReturn = [];
           response?.data?.hits?.hits.forEach((film) => {
             let cur = {};
-            cur.id = film.id;
+            cur.id = film._id;
             cur.title = film._source.primaryTitle;
             cur.year = film._source.startYear;
             cur.rating = film._source.averageRating;
@@ -140,7 +140,6 @@ function Search(props) {
         });
     }
   };
-
 
   const deleteMovie = (deleteFilm) => {
     setSavedMovies((savedMovies) =>
@@ -169,15 +168,42 @@ function Search(props) {
                   >
                     ↓
                   </Button>
-                  <Button className="sort-button">↑</Button>
+                  <Button 
+                    className="sort-button"
+                    onClick={() => sortTitleReverse(savedMovies)}
+                  >
+                    ↑
+                  </Button>
                 </th>
                 <th>
-                  Release Year<Button className="sort-button">↓</Button>
-                  <Button className="sort-button">↑</Button>
+                  Release Year
+                  <Button 
+                    className="sort-button"
+                    onClick={() => sortYear(savedMovies)}
+                  >
+                    ↓
+                  </Button>
+                  <Button 
+                    className="sort-button"
+                    onClick={() => sortYearReverse(savedMovies)}
+                  > 
+                    ↑
+                  </Button>
                 </th>
                 <th>
-                  Rating<Button className="sort-button">↓</Button>
-                  <Button className="sort-button">↑</Button>
+                  Rating
+                  <Button 
+                    className="sort-button"
+                    onClick={() => sortRating(savedMovies)}
+                  >
+                    ↓
+                  </Button>
+                  <Button 
+                    className="sort-button"
+                    onClick={() => sortRatingReverse(savedMovies)}
+                  >
+                    ↑
+                  </Button>
                 </th>
                 <th></th>
               </tr>
@@ -211,91 +237,92 @@ function Search(props) {
 }
 
 function showMovieCheckboxes(){
-    return(
-        <Form>
-            <label class="check">
-                <input
-                    type="checkbox"
-                    value="title"
-                    checked={selectedCheckbox === 'title'}
-                    onChange={handleCheckboxChange}
-                />
-                Movie Title
-                <span class="box"></span>
-            </label>  
-            <label class="check">
-                <input
-                    type="checkbox"
-                    value="genre"
-                    checked={selectedCheckbox === 'genre'}
-                    onChange={handleCheckboxChange}
-                />
-                Genre
-                <span class="box"></span>
-            </label>
-            <label class="check">
-                <input
-                    type="checkbox"
-                    value="year"
-                    checked={selectedCheckbox === 'year'}
-                    onChange={handleCheckboxChange}
-                />
-                Year
-                <span class="box"></span>
-            </label>
-            <label class="check">
-                <input
-                    type="checkbox"
-                    value="actor"
-                    checked={selectedCheckbox === 'actor'}
-                    onChange={handleCheckboxChange}
-                />
-                Actor
-                <span class="box"></span>
-            </label>
-            <label class="check">
-                <input
-                    type="checkbox"
-                    value="actress"
-                    checked={selectedCheckbox === 'actress'}
-                    onChange={handleCheckboxChange}
-                />
-                Actress
-                <span class="box"></span>
-            </label>
-            <label class="check">
-                <input
-                    type="checkbox"
-                    value="writer"
-                    checked={selectedCheckbox === 'writer'}
-                    onChange={handleCheckboxChange}
-                />
-                Writer
-                <span class="box"></span>
-            </label>
-            <label class="check">
-                <input
-                    type="checkbox"
-                    value="director"
-                    checked={selectedCheckbox === 'director'}
-                    onChange={handleCheckboxChange}
-                />
-                Director
-                <span class="box"></span>
-            </label>
-            <label class="check">
-                <input
-                    type="checkbox"
-                    value="producer"
-                    checked={selectedCheckbox === 'producer'}
-                    onChange={handleCheckboxChange}
-                />
-                Producer
-                <span class="box"></span>
-            </label>
-      </Form>
-    )
+  return(
+      <Form>
+          <label class="check">
+              <input
+                  type="checkbox"
+                  value="title"
+                  checked={selectedCheckbox === 'title'}
+                  onChange={handleCheckboxChange}
+              />
+              Movie Title
+              <span class="box"></span>
+          </label>  
+          <label class="check">
+              <input
+                  type="checkbox"
+                  value="genre"
+                  checked={selectedCheckbox === 'genre'}
+                  onChange={handleCheckboxChange}
+              />
+              Genre
+              <span class="box"></span>
+          </label>
+          <label class="check">
+              <input
+                  type="checkbox"
+                  value="year"
+                  checked={selectedCheckbox === 'year'}
+                  onChange={handleCheckboxChange}
+              />
+              Year
+              <span class="box"></span>
+          </label>
+          <label class="check">
+              <input
+                  type="checkbox"
+                  value="actor"
+                  checked={selectedCheckbox === 'actor'}
+                  onChange={handleCheckboxChange}
+              />
+              Actor
+              <span class="box"></span>
+          </label>
+          <label class="check">
+              <input
+                  type="checkbox"
+                  value="actress"
+                  checked={selectedCheckbox === 'actress'}
+                  onChange={handleCheckboxChange}
+              />
+              Actress
+              <span class="box"></span>
+          </label>
+          <label class="check">
+              <input
+                  type="checkbox"
+                  value="writer"
+                  checked={selectedCheckbox === 'writer'}
+                  onChange={handleCheckboxChange}
+              />
+              Writer
+              <span class="box"></span>
+          </label>
+          <label class="check">
+              <input
+                  type="checkbox"
+                  value="director"
+                  checked={selectedCheckbox === 'director'}
+                  onChange={handleCheckboxChange}
+              />
+              Director
+              <span class="box"></span>
+          </label>
+          <label class="check">
+              <input
+                  type="checkbox"
+                  value="producer"
+                  checked={selectedCheckbox === 'producer'}
+                  onChange={handleCheckboxChange}
+              />
+              Producer
+              <span class="box"></span>
+          </label>
+    </Form>
+  )
 }
+
   const sortTitle = (target) => {
     const sortedTitles = [...target].sort((a, b) => {
       const nameA = a.title.toUpperCase();
@@ -311,10 +338,91 @@ function showMovieCheckboxes(){
     setSavedMovies(sortedTitles);
     console.log(savedMovies);
   };
+
+  const sortTitleReverse = (target) => {
+    const sortedTitles = [...target].sort((a, b) => {
+      const nameA = a.title.toUpperCase();
+      const nameB = b.title.toUpperCase();
+      if (nameA < nameB) {
+        return 1;
+      }
+      if (nameA > nameB) {
+        return -1;
+      }
+      return 0;
+    });
+    setSavedMovies(sortedTitles);
+    console.log(savedMovies);
+  };
+
+  const sortYear = (target) => {
+    const sortedYears = [...target].sort((a, b) => {
+      const yearA = a.year;
+      const yearB = b.year;
+      if (yearA < yearB) {
+        return 1;
+      }
+      if (yearA > yearB) {
+        return -1;
+      }
+      return 0;
+    });
+    setSavedMovies(sortedYears);
+    console.log(savedMovies);
+  };
+
+  const sortYearReverse = (target) => {
+    const sortedYears = [...target].sort((a, b) => {
+      const yearA = a.year;
+      const yearB = b.year;
+      if (yearA < yearB) {
+        return -1;
+      }
+      if (yearA > yearB) {
+        return 1;
+      }
+      return 0;
+    });
+    setSavedMovies(sortedYears);
+    console.log(savedMovies);
+  };
+
+  const sortRating = (target) => {
+    const sortedRatings = [...target].sort((a, b) => {
+      const ratingA = a.rating;
+      const ratingB = b.rating;
+      if (ratingA < ratingB) {
+        return 1;
+      }
+      if (ratingA > ratingB) {
+        return -1;
+      }
+      return 0;
+    });
+    setSavedMovies(sortedRatings);
+    console.log(savedMovies);
+  };
+
+  const sortRatingReverse = (target) => {
+    const sortedRatings = [...target].sort((a, b) => {
+      const ratingA = a.rating;
+      const ratingB = b.rating;
+      if (ratingA < ratingB) {
+        return -1;
+      }
+      if (ratingA > ratingB) {
+        return 1;
+      }
+      return 0;
+    });
+    setSavedMovies(sortedRatings);
+    console.log(savedMovies);
+  };
+
+
   return (
-      <>
-      <h1 className= "WelcomeMessage"> Welcome to FlickMe! Look up any movie, song, or TV show and save it to your playlist! </h1>
-         <div class = "dropdown">
+    <>
+      <div class = "dropdown">
             <select value={selectedLink1} onChange={handleDropDownMenuChange1}>
                 <option value="">View My Playlists:</option>
                 <option value="moviePlaylist">My Movie Playlist</option>
@@ -322,8 +430,8 @@ function showMovieCheckboxes(){
                 <option value="tvPlaylist">My TV Show Playlist</option>
             </select>
             {selectedLink1 === 'moviePlaylist' && showMoviePlayList()}
-        </div> 
-      <h3 className="SearchBarTitle">ElasticMedia</h3>
+        </div>
+      <h3 className="SearchBarTitle">FlickMe</h3>
         <div class = "dropdown2">
             <select value={selectedLink2} onChange={handleDropDownMenuChange2}>
                 <option value="">Select a form of media:</option>
@@ -332,7 +440,8 @@ function showMovieCheckboxes(){
                 <option value="tv">TV Shows</option>
             </select>
             {selectedLink2 === 'movies' && showMovieCheckboxes()}
-        </div> 
+        </div>
+      
       <Form onSubmit={handleSubmit} className="search-bar">
         <InputGroup className="mb-3" size="lg">
           <Form.Control
@@ -340,7 +449,7 @@ function showMovieCheckboxes(){
             aria-label=""
             aria-describedby="basic-addon2"
             onChange={(e) => {
-              if (e.target.value.match(/^[A-Z 'a-z0-9 -:]*$/)) {
+              if (e.target.value.match(/^[A-Z 'a-z0-9]*$/)) {
                 setInput(e.target.value);
               }
             }}
@@ -351,65 +460,56 @@ function showMovieCheckboxes(){
           </Button>
         </InputGroup>
       </Form>
+
       {results.length > 0 && (
-        <Table striped bordered hover variant="dark">
-          <thead>
-            <tr>
-              <th>
-                Title
-                <Button
-                  className="sort-button"
-                  onClick={() => sortTitle(results)}
-                >
-                  ↓
-                </Button>
-                <Button className="sort-button">↑</Button>
-              </th>
-              <th>
-                Release Year<Button className="sort-button">↓</Button>
-                <Button className="sort-button">↑</Button>
-              </th>
-              <th>
-                Rating<Button className="sort-button">↓</Button>
-                <Button className="sort-button">↑</Button>
-              </th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
+        <div>
+          <Carousel cols={5} rows={1} gap={10} loop>
             {results.map((film) => {
               return (
-                <tr>
-                  <td>{film.title}</td>
-                  <td>{film.year}</td>
-                      <td>{film.rating}</td>
-                      <td><img src={film.imageUrl} /></td>
-                  <td className="d-grid gap-2" style={{ textAlign: "center" }}>
-                    {savedMovies.includes(film) ? (
-                      <Button
-                        variant="danger"
-                        id="button-addon2"
-                        size="sm"
-                        onClick={() => deleteMovie(film)}
-                      >
-                        Unsave
-                      </Button>
-                    ) : (
-                      <Button
-                        variant="secondary"
-                        id="button-addon2"
-                        size="sm"
-                        onClick={() => saveMovie(film)}
-                      >
-                        Click to Save!
-                      </Button>
-                    )}
-                  </td>
-                </tr>
+                <Carousel.Item>
+                  {savedMovies.includes(film) ? (
+                    <img
+                      className="d-block w-100"
+                      src={film.imageUrl}
+                      alt="First slide"
+                      style={{ cursor: "pointer", filter: "grayscale(1)" }}
+                      onClick={() => deleteMovie(film)}
+                    />
+                  ) : (
+                    <img
+                      className="d-block w-100"
+                      src={film.imageUrl}
+                      alt="First slide"
+                      style={{ cursor: "pointer" }}
+                      onClick={() => saveMovie(film)}
+                    />
+                  )}
+                </Carousel.Item>
               );
+              {
+                /* {savedMovies.includes(film) ? (
+                    <Button
+                      variant="danger"
+                      id="button-addon2"
+                      size="sm"
+                      onClick={() => deleteMovie(film)}
+                    >
+                      Remove Saved
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="secondary"
+                      id="button-addon2"
+                      size="sm"
+                      onClick={() => saveMovie(film)}
+                    >
+                      Click to Save!
+                    </Button>
+                  )} */
+              }
             })}
-          </tbody>
-        </Table>
+          </Carousel>
+        </div>
       )}
     </>
   );
